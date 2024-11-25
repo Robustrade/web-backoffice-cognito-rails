@@ -8,11 +8,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  namespace :cognito do
+  scope '/cognito' do
     post :create_role, to: 'cognito#create_role'
-    post :add_user_to_role, to: 'cognito#add_user_to_role'
-    post :remove_user_from_role, to: 'cognito#remove_user_from_role'
-    post :add_role_permission, to: 'cognito#add_role_permission'
-    post :update_role_permission, to: 'cognito#update_role_permission'
+    post :add_user_to_group, to: 'cognito#add_user_to_group'
+    post :remove_user_from_group, to: 'cognito#remove_user_from_group'
+    # post :add_role_permission, to: 'cognito#add_role_permission'
+    # post :update_role_permission, to: 'cognito#update_role_permission'
   end
 end
