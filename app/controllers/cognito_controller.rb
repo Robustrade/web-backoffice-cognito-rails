@@ -1,44 +1,41 @@
 class CognitoController < ApplicationController
   def create_role
-    response = AwsCognitoService.new(role_name: user_role_params[:role_name]).create_role
+    response = AwsCognitoService.new(group_name: user_role_params[:group_name])
+                                .create_group(user_role_params[:description], user_role_params[:precedence])
+
+    render json: { response: response }, status: response[:success] ? 200 : 422
   end
 
-  def add_user_to_role
+  def add_user_to_group
     response = AwsCognitoService.new(
-      action: :add_user_to_role,
-      role_arn: user_role_params[:role_arn],
+      action: :add_user_to_group,
+      group_name: user_role_params[:group_name],
       username: user_role_params[:username]
     ).manage_user
+
+    render json: { response: response }, status: response[:success] ? 200 : 422
   end
 
-  def remove_user_from_role
+  def remove_user_from_group
     response = AwsCognitoService.new(
-      action: :remove_user_from_role,
-      role_arn: user_role_params[:role_arn],
+      action: :remove_user_from_group,
+      group_name: user_role_params[:group_name],
       username: user_role_params[:username]
     ).manage_user
-  end
 
-  def add_role_permission
-    response = AwsCognitoService.new(
-      action: :add_role_permission,
-      role_name: user_role_params[:role_name],
-      role_arn: user_role_params[:role_arn]
-    ).manage_permission
-  end
-
-  def update_role_permission
-    response = AwsCognitoService.new(
-      action: :update_role_permission,
-      role_name: user_role_params[:role_name],
-      role_arn: user_role_params[:role_arn],
-      new_role_arn: user_role_params[:new_role_arn]
-    ).manage_permission
+    render json: { response: response }, status: response[:success] ? 200 : 422
   end
 
   private
 
   def user_role_params
-    permit.require(:role).permit(:role_name, :role_arn, :username, :action, :new_role_arn)
+    params.require(:role).permit(
+      :group_name,
+      :role_arn,
+      :username,
+      :action,
+      :description,
+      :precedence
+    )
   end
 end

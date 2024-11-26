@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.0.1"
+ruby "3.1.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.5"
@@ -54,6 +54,8 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]
 
   gem 'byebug'
+
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -71,4 +73,8 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  gem 'webmock'
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
