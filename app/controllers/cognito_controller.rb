@@ -26,6 +26,11 @@ class CognitoController < ApplicationController
     render json: { response: response }, status: response[:success] ? 200 : 422
   end
 
+  def process_file_data
+    response = ProcessPermissionRequestService.new(process_data_params[:email], process_data_params[:file]).call
+    render json: { response: response }, status: response[:success] ? 200 : 422
+  end
+
   private
 
   def user_role_params
@@ -37,5 +42,9 @@ class CognitoController < ApplicationController
       :description,
       :precedence
     )
+  end
+
+  def process_data_params
+    params.require(:data).permit(:file, :email)
   end
 end

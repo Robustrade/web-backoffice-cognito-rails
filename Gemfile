@@ -78,3 +78,9 @@ group :test do
   gem 'factory_bot_rails'
   gem 'faker'
 end
+
+gem "sidekiq", "~> 7.3"
+
+gem "roo", "~> 2.10"
+
+gem "sidekiq-throttled", "~> 1.5"

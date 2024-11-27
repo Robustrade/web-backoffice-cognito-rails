@@ -41,6 +41,15 @@ class AwsCognitoService
     { success: false, error: e }
   end
 
+  def find_username(email)
+    response = cognito.list_users({user_pool_id: user_pool_id || ENV['AWS_USER_POOL_ID'],filter: "email = \"#{email}\"",})
+    return { success: false, error: 'User not found with the given mail' } if response[:users].empty?
+
+    { success: true, username: response[:users].first[:username] }
+  rescue StandardError => e
+    { success: false, error: e }
+  end
+
   private
 
   def add_user_to_group
