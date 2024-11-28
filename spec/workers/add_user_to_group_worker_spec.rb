@@ -6,6 +6,7 @@ RSpec.describe AddUserToGroupWorker do
   let(:group_name) { 'admins' }
   let(:username) { 'test_user' }
   let(:cognito_service) { instance_double(AwsCognitoService) }
+  let(:user_pool_id) { 'test_pool' }
 
   before do
     allow(AwsCognitoService).to receive(:new).and_return(cognito_service)
@@ -20,22 +21,23 @@ RSpec.describe AddUserToGroupWorker do
     expect(AwsCognitoService).to receive(:new).with(
       action: :add_user_to_group,
       group_name: group_name,
-      username: username
+      username: username,
+      user_pool_id: user_pool_id
     )
 
-    subject.perform(group_name, username)
+    subject.perform(group_name, username, user_pool_id)
   end
 
   it 'executes manage_user on the service' do
     expect(cognito_service).to receive(:manage_user)
-    subject.perform(group_name, username)
+    subject.perform(group_name, username, user_pool_id)
   end
 
   # This test is skipped because the mocking of the service is not yet implemented
   it 'respects throttling limits' do
     Timecop.freeze do
       start_time = Time.current
-      25.times { described_class.perform_async(group_name, username) }
+      25.times { described_class.perform_async(group_name, username, user_pool_id) }
 
       processed_count = Sidekiq::Queue.new('default').size
       Timecop.travel(1.second)

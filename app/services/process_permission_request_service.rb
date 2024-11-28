@@ -3,11 +3,12 @@
 # Purpose: This service class is responsible for processing the permission request.
 # It is responsible for parsing the excel file, finding the username of the user and enqueueing the job.
 class ProcessPermissionRequestService
-  attr_reader :email, :file, :username
+  attr_reader :email, :file, :username, :user_pool_id
 
-  def initialize(email, file)
+  def initialize(email, file, user_pool_id)
     @email = email
     @file = file
+    @user_pool_id = user_pool_id
   end
 
   def call
@@ -22,7 +23,7 @@ class ProcessPermissionRequestService
   private
 
   def set_username
-    aws_response = AwsCognitoService.new.fetch_username(email)
+    aws_response = AwsCognitoService.new(user_pool_id: user_pool_id).fetch_username(email)
     raise aws_response[:error] unless aws_response[:success]
 
     @username = aws_response[:username]
@@ -36,6 +37,6 @@ class ProcessPermissionRequestService
   end
 
   def enqueue_job(old_permissions, new_permissions)
-    AwsCognitoApiWorker.perform_async(username, old_permissions, new_permissions)
+    AwsCognitoApiWorker.perform_async(username, old_permissions, new_permissions, user_pool_id)
   end
 end

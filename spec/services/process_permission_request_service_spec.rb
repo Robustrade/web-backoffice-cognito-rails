@@ -6,7 +6,8 @@ RSpec.describe ProcessPermissionRequestService do
   let(:email) { 'testuser@kulu.com' }
   let(:file) { fixture_file_upload('test_file.xlsx') }
   let(:username) { 'test_user' }
-  let(:service) { described_class.new(email, file) }
+  let(:user_pool_id) { 'test_pool' }
+  let(:service) { described_class.new(email, file, user_pool_id) }
   let(:aws_cognito_service) { instance_double(AwsCognitoService) }
   let(:excel_parser) { instance_double(ExcelParser) }
 
@@ -32,7 +33,7 @@ RSpec.describe ProcessPermissionRequestService do
         result = service.call
         expect(result[:success]).to be true
         expect(AwsCognitoApiWorker).to have_received(:perform_async)
-          .with(username, old_permissions, new_permissions)
+          .with(username, old_permissions, new_permissions, user_pool_id)
       end
     end
 
@@ -65,7 +66,7 @@ RSpec.describe ProcessPermissionRequestService do
     end
 
     context 'when file is nil' do
-      let(:service) { described_class.new(email, nil) }
+      let(:service) { described_class.new(email, nil, user_pool_id) }
 
       before do
         allow(aws_cognito_service).to receive(:fetch_username)
@@ -81,7 +82,7 @@ RSpec.describe ProcessPermissionRequestService do
     end
 
     context 'when email is invalid' do
-      let(:service) { described_class.new('invalid-email', file) }
+      let(:service) { described_class.new('invalid-email', file, user_pool_id) }
 
       before do
         allow(aws_cognito_service).to receive(:fetch_username)

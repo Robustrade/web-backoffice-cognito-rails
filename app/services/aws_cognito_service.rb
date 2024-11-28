@@ -19,7 +19,7 @@ class AwsCognitoService
   def create_group(description = nil, precedence = nil)
     response = cognito.create_group({
                                       group_name: group_name,
-                                      user_pool_id: user_pool_id || ENV['AWS_USER_POOL_ID'],
+                                      user_pool_id: user_pool_id,
                                       description: description,
                                       precedence: precedence
                                     })
@@ -42,7 +42,7 @@ class AwsCognitoService
   end
 
   def fetch_username(email)
-    response = cognito.list_users({ user_pool_id: user_pool_id || ENV['AWS_USER_POOL_ID'],
+    response = cognito.list_users({ user_pool_id: user_pool_id,
                                     filter: "email = \"#{email}\"" })
     return { success: false, error: 'User not found with the given mail' } if response[:users].empty?
 
@@ -55,7 +55,7 @@ class AwsCognitoService
 
   def add_user_to_group
     cognito.admin_add_user_to_group({
-                                      user_pool_id: user_pool_id || ENV['AWS_USER_POOL_ID'],
+                                      user_pool_id: user_pool_id,
                                       username: username,
                                       group_name: group_name
                                     })
@@ -63,7 +63,7 @@ class AwsCognitoService
 
   def remove_user_from_group
     cognito.admin_remove_user_from_group({
-                                           user_pool_id: user_pool_id || ENV['AWS_USER_POOL_ID'],
+                                           user_pool_id: user_pool_id,
                                            username: username,
                                            group_name: group_name
                                          })
