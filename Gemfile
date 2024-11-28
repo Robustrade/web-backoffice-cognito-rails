@@ -84,3 +84,5 @@ gem "sidekiq", "~> 7.3"
 gem "roo", "~> 2.10"
 
 gem "sidekiq-throttled", "~> 1.5"
+
+gem "timecop", "~> 0.9.10"

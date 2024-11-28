@@ -14,7 +14,7 @@ class ProcessPermissionRequestService
     set_username
     resp = parse_excel
     enqueue_job(resp[:old_permissions], resp[:new_permissions])
-    response
+    resp
   rescue StandardError => e
     { success: false, error: e.message }
   end
@@ -22,7 +22,7 @@ class ProcessPermissionRequestService
   private
 
   def set_username
-    aws_response = AwsCognitoService.new.find_username(email)
+    aws_response = AwsCognitoService.new.fetch_username(email)
     raise aws_response[:error] unless aws_response[:success]
 
     @username = aws_response[:username]
