@@ -18,7 +18,7 @@ RSpec.describe ExcelParser do
   describe '#fetch_roles' do
     context 'when Excel file has valid data' do
       it 'returns old and new roles for matching email' do
-        old_role, new_role = parser.fetch_roles
+        old_role, new_role = parser.send(:fetch_roles)
         expect(old_role).to eq('Customer Support L1')
         expect(new_role).to eq('Backoffice Support L1')
       end
@@ -28,7 +28,7 @@ RSpec.describe ExcelParser do
       let(:email) { 'nonexistent@example.com' }
 
       it 'returns empty array' do
-        expect(parser.fetch_roles).to eq([])
+        expect(parser.send(:fetch_roles)).to eq([])
       end
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe ExcelParser do
 
     it 'returns correct indices for given columns' do
       columns = ['Email', 'Role (Backoffice)', 'New Role (Backoffice)']
-      indices = parser.get_indices(headers, columns)
+      indices = parser.send(:get_indices, headers, columns)
 
       expect(indices[:email]).to eq(0)
       expect(indices[:role_backoffice]).to eq(1)
@@ -47,7 +47,7 @@ RSpec.describe ExcelParser do
 
     it 'handles missing columns' do
       columns = ['Missing Column']
-      indices = parser.get_indices(headers, columns)
+      indices = parser.send(:get_indices, headers, columns)
 
       expect(indices[:missing_column]).to be_nil
     end
@@ -60,7 +60,7 @@ RSpec.describe ExcelParser do
     let(:indices) { { email: 4, role_backoffice: 6, new_role_backoffice: 7 } }
 
     it 'finds correct row for matching email' do
-      row = parser.fetch_role_row(sheet, indices)
+      row = parser.send(:fetch_role_row, sheet, indices)
       expect(row).to eq(['Request #8', 39.0, 'Charlotte', 'SOLIE', 'testuser@kulu.com', 'Call Center',
                          'Customer Support L1', 'Backoffice Support L1', nil, nil, nil, nil, nil, nil])
     end
@@ -69,7 +69,7 @@ RSpec.describe ExcelParser do
       let(:file) { fixture_file_upload('test_file_missing_roles.xlsx') }
 
       it 'returns nil for incomplete data' do
-        row = parser.fetch_role_row(sheet, indices)
+        row = parser.send(:fetch_role_row, sheet, indices)
         expect(row).to be_nil
       end
     end

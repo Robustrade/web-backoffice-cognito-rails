@@ -18,6 +18,18 @@ class ExcelParser
     raise InvalidFileError, "Invalid excel file: #{e.message}"
   end
 
+  def parse
+    old_role, new_role = fetch_roles
+    if old_role.nil? || new_role.nil?
+      raise ArgumentError,
+            "Permission request data with the email #{email} not found or either of old role and new role is not present"
+    end
+
+    fetch_permissions(old_role, new_role)
+  end
+
+  private
+
   def fetch_roles
     sheet = xlsx.sheet(xlsx.sheets.first)
     raise SheetNotFoundError, 'Excel file must contain at least one sheet' if sheet.nil?
@@ -77,15 +89,5 @@ class ExcelParser
     end
 
     response
-  end
-
-  def parse
-    old_role, new_role = fetch_roles
-    if old_role.nil? || new_role.nil?
-      raise ArgumentError,
-            "Permission request data with the email #{email} not found or either of old role and new role is not present"
-    end
-
-    fetch_permissions(old_role, new_role)
   end
 end
