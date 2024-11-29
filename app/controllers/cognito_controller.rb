@@ -1,4 +1,6 @@
 class CognitoController < ApplicationController
+  before_action :validate_params, only: [:process_file_data]
+
   def create_role
     response = AwsCognitoService.new(group_name: user_role_params[:group_name])
                                 .create_group(user_role_params[:description], user_role_params[:precedence])
@@ -35,6 +37,14 @@ class CognitoController < ApplicationController
   end
 
   private
+
+  def validate_params
+    validator = ParamsValidator.new(process_data_params, params[:action])
+
+    return if validator.valid?
+
+    render json: { errors: validator.errors }, status: 422
+  end
 
   def user_role_params
     params.require(:role).permit(

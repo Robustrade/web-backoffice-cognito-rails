@@ -89,4 +89,34 @@ RSpec.describe AwsCognitoService do
       expect(resp[:error]).to eq('User not found with the given mail')
     end
   end
+
+  describe '#remove_user_from_group' do
+    it 'removes a user from a group successfully' do
+      allow(cognito_client).to receive(:admin_remove_user_from_group).and_return(true)
+
+      service = described_class.new(
+        action: :remove_user_from_group,
+        group_name: 'admins',
+        username: 'test_user'
+      )
+      result = service.manage_user
+
+      expect(result[:success]).to eq(true)
+      expect(result[:message]).to eq('User updated successfully!')
+    end
+
+    it 'handles errors when removing a user from a group' do
+      allow(cognito_client).to receive(:admin_remove_user_from_group).and_raise(StandardError, 'AWS Error')
+
+      service = described_class.new(
+        action: :remove_user_from_group,
+        group_name: 'admins',
+        username: 'test_user'
+      )
+      result = service.manage_user
+
+      expect(result[:success]).to eq(false)
+      expect(result[:error].message).to eq('AWS Error')
+    end
+  end
 end
