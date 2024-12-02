@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -7,11 +9,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  mount Sidekiq::Web => "/sidekiq"
 
   scope '/cognito' do
     post :create_role, to: 'cognito#create_role'
     post :add_user_to_group, to: 'cognito#add_user_to_group'
     post :remove_user_from_group, to: 'cognito#remove_user_from_group'
+    post :process_file_data, to: 'cognito#process_file_data'
     # post :add_role_permission, to: 'cognito#add_role_permission'
     # post :update_role_permission, to: 'cognito#update_role_permission'
   end
