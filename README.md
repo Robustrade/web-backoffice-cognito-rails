@@ -13,9 +13,10 @@ Environment Variables:
 Steps to setup the repository:
 1. Clone the repository from `git@github.com:Robustrade/web-backoffice-cognito-rails.git`
 2. Run `rails db:create` to create database
-3. To start rails server:
+3. Run `bundle install` to install all the required gems
+4. To start rails server:
   a. in development, staging mode: `rails server -b <0.0.0.0> -d`
     -b - for port binding as per proxy configuration
     -d - for execution in deamon mode
   b. in production, `rails server -b 0.0.0.0 -d ENV=production`
-4. run `redis` and `sidekiq`
+5. run `redis` and `sidekiq`
