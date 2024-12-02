@@ -1,24 +1,21 @@
-# README
+Steps to setup repository and dependencies
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Prerquisites and Dependencies:
+- Ruby - 3.1.0
+- Rails - 7.1.5
+- Redis
+- Sidekiq
+- Nginx - web proxy (or anyother related service)
 
-Things you may want to cover:
+Environment Variables:
+- the list of required environment variables have been listed in `.env.example` file present in the root directory of the application
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Steps to setup the repository:
+1. Clone the repository from `git@github.com:Robustrade/web-backoffice-cognito-rails.git`
+2. Run `rails db:create` to create database
+3. To start rails server:
+  a. in development, staging mode: `rails server -b <0.0.0.0> -d`
+    -b - for port binding as per proxy configuration
+    -d - for execution in deamon mode
+  b. in production, `rails server -b 0.0.0.0 -d ENV=production`
+4. run `redis` and `sidekiq`
