@@ -180,7 +180,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
-    pg (1.5.9)
     psych (5.2.0)
       stringio
     public_suffix (6.0.1)
@@ -327,7 +326,6 @@ DEPENDENCIES
   faker
   importmap-rails
   jbuilder
-  pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.1.5)
   roo (~> 2.10)
