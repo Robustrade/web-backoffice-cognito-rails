@@ -1,22 +1,65 @@
-Steps to setup repository and dependencies
+# Web Backoffice Cognito Rails
 
-Prerquisites and Dependencies:
-- Ruby - 3.1.0
-- Rails - 7.1.5
+A Rails application for managing AWS Cognito user permissions and roles.
+
+## Prerequisites
+
+- Ruby 3.1.0
+- Rails 7.1.5
 - Redis
 - Sidekiq
-- Nginx - web proxy (or anyother related service)
+- Nginx (or any other web proxy service)
 
-Environment Variables:
-- the list of required environment variables have been listed in `.env.example` file present in the root directory of the application
+## Environment Setup
 
-Steps to setup the repository:
-1. Clone the repository from `git@github.com:Robustrade/web-backoffice-cognito-rails.git`
-2. Run `rails db:create` to create database
-3. Run `bundle install` to install all the required gems
-4. To start rails server:
-  a. in development, staging mode: `rails server -b <0.0.0.0> -d`
-    -b - for port binding as per proxy configuration
-    -d - for execution in deamon mode
-  b. in production, `rails server -b 0.0.0.0 -d ENV=production`
-5. run `redis` and `sidekiq`
+1. Clone the repository:
+   - `git clone git@github.com:Robustrade/web-backoffice-cognito-rails.git`
+
+
+2. Install dependencies:
+   - `bundle install`
+
+
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Fill in all required environment variables
+
+4. Set up credentials for production:
+   - `RAILS_ENV=production rails credentials:edit`
+
+
+## Running the Application
+
+### Development
+
+1. Start Redis server
+   - `redis-server`
+
+2. Start Sidekiq:
+   - `bundle exec sidekiq`
+
+
+3. Start Rails server:
+   - `rails server -b 0.0.0.0 -d`
+
+
+### Production
+
+Start Rails server in production mode:
+   - `RAILS_ENV=production rails server -b 0.0.0.0 -d`
+
+
+## Server Options
+
+- `-b 0.0.0.0`: Bind to all interfaces (required for proxy configuration)
+- `-d`: Run in daemon mode (background)
+
+## Additional Information
+
+- The application requires Redis and Sidekiq for background job processing
+- Nginx or similar web proxy is recommended for production deployment
+- Make sure all environment variables are properly configured before starting the application
+
+## License
+
+   - To be Added
